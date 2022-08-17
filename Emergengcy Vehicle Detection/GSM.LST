@@ -1,0 +1,363 @@
+ARM COMPILER V2.32a,  GSM                                                                  21/06/22  23:48:52  PAGE 1   
+
+
+ARM COMPILER V2.32a, COMPILATION OF MODULE GSM
+OBJECT MODULE PLACED IN GSM.OBJ
+COMPILER INVOKED BY: D:\keil3\ARM\BIN\CA.exe GSM.c THUMB BROWSE DEBUG TABS(4) 
+
+stmt  level    source
+
+    1          #include<Header.h>
+    2          #include<string.h>
+    3          
+    4          unsigned char cmd_1[]="AT";                         //attention command
+    5          unsigned char cmd_2[]="ATE0";                       //charecters not echoed
+    6          unsigned char cmd_3[]="AT+CNMI=2,1,0,0,0";           //procedure for message reception from the n/w         
+    7          unsigned char cmd_4[]="AT+CMGF=1";                  //set text mode
+    8          unsigned char cmd_6[]="AT&W";                       //modification saving in eeprom
+    9          
+   10          unsigned char pno[11],SMS;
+   11          
+   12          
+   13          
+   14          void Gsm_Init()
+   15          {
+   16   1      unsigned char i;
+   17   1      for(i=0;cmd_1[i]!='\0';i++)
+   18   1      {
+   19   2      UART0_TX(cmd_1[i]);                             // attention command
+   20   2      }
+   21   1      UART0_TX(0X0D);
+   22   1      while(UART0_RECV()!='K');
+   23   1      
+   24   1      for(i=0;cmd_6[i]!='\0';i++)
+   25   1      {
+   26   2      UART0_TX(cmd_6[i]);                             // at&w,modification saving in eeprom
+   27   2      }
+   28   1      UART0_TX(0X0D);
+   29   1      while(UART0_RECV()!='K');
+   30   1      
+   31   1      
+   32   1      for(i=0;cmd_2[i]!='\0';i++)
+   33   1      {
+   34   2      UART0_TX(cmd_2[i]);                             // attention command for echo
+   35   2      }
+   36   1      UART0_TX(0X0D);
+   37   1      while(UART0_RECV()!='K');
+   38   1      
+   39   1      
+   40   1      for(i=0;cmd_3[i]!='\0';i++)
+   41   1      {
+   42   2      UART0_TX(cmd_3[i]);               //procedure for message reception from the n/w 
+   43   2      }
+   44   1      UART0_TX(0X0D);
+   45   1      while(UART0_RECV()!='K');
+   46   1      
+   47   1      
+   48   1      for(i=0;cmd_4[i]!='\0';i++)
+   49   1      {
+   50   2      UART0_TX(cmd_4[i]);                 // attention command for message in text mode
+   51   2      }
+   52   1      UART0_TX(0X0D);
+   53   1      while(UART0_RECV()!='K');
+   54   1      
+   55   1      //lcd_cmd(0x01);
+   56   1       //lcd_cmd(0x80);
+   57   1       //lcd_string("gsm initialised");          
+   58   1      }
+   59          
+ARM COMPILER V2.32a,  GSM                                                                  21/06/22  23:48:52  PAGE 2   
+
+   60           void Gsm_Del_Msg()
+   61          {
+   62   1      UART0_TX_ST("AT+CMGDA=\"del all\"");                           
+   63   1      UART0_TX(0X0D);
+   64   1          //      lcd_cmd(0x01);
+   65   1          //      lcd_cmd(0xc0);
+   66   1          //      lcd_cmd('*');             // * shows message deleted
+   67   1      }
+ARM COMPILER V2.32a,  GSM                                                                  21/06/22  23:48:52  PAGE 3   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+
+*** EXTERNALS:
+ EXTERN CODE16 (UART0_RECV?T)
+ EXTERN CODE16 (UART0_TX?T)
+ EXTERN CODE16 (UART0_TX_ST?T)
+
+
+
+*** PUBLICS:
+ PUBLIC         Gsm_Init?T
+ PUBLIC         Gsm_Del_Msg?T
+ PUBLIC         cmd_1
+ PUBLIC         cmd_2
+ PUBLIC         cmd_3
+ PUBLIC         cmd_4
+ PUBLIC         cmd_6
+ PUBLIC         pno
+ PUBLIC         SMS
+
+
+
+*** DATA SEGMENT '?CON?GSM':
+ 00000000          ??S_6:
+ 00000000            DB          'AT+CMGDA="del all"',0x00
+
+*** DATA SEGMENT '?DT0?GSM':
+ 00000000          cmd_1:
+ 00000000           BEGIN_INIT
+ 00000000            DB          'AT',0x00
+ 00000003           END_INIT
+ 00000003          cmd_2:
+ 00000003           BEGIN_INIT
+ 00000003            DB          'ATE0',0x00
+ 00000008           END_INIT
+ 00000008          cmd_3:
+ 00000008           BEGIN_INIT
+ 00000008            DB          'AT+CNMI=2,1,0,0,0',0x00
+ 0000001A           END_INIT
+ 0000001A          cmd_4:
+ 0000001A           BEGIN_INIT
+ 0000001A            DB          'AT+CMGF=1',0x00
+ 00000024           END_INIT
+ 00000024          cmd_6:
+ 00000024           BEGIN_INIT
+ 00000024            DB          'AT&W',0x00
+ 00000029           END_INIT
+ 00000029          pno:
+ 00000029            DS          11
+ 00000034          SMS:
+ 00000034            DS          1
+
+
+
+*** CODE SEGMENT '?PR?Gsm_Init?T?GSM':
+   14: void Gsm_Init()
+ 00000000  B510      PUSH        {R4,LR}
+   15: {
+ 00000002            ; SCOPE-START
+   17: for(i=0;cmd_1[i]!='\0';i++)
+ 00000002  2400      MOV         R4,#0x0
+ 00000004  ---- Variable 'i' assigned to Register 'R4' ----
+ 00000004  E009      B           L_3  ; T=0x0000001A
+ 00000006          L_4:
+   19: UART0_TX(cmd_1[i]);                             // attention command
+ 00000006  1C20      MOV         R0,R4 ; i
+ 00000008  0601      LSL         R1,R0,#0x18 ; i
+ 0000000A  0E09      LSR         R1,R1,#0x18
+ 0000000C  4800      LDR         R0,=cmd_1 ; cmd_1
+ 0000000E  5C40      LDRB        R0,[R0,R1]
+ 00000010  F7FF      BL          UART0_TX?T  ; T=0x0001  (1)
+ 00000012  FFF6      BL          UART0_TX?T  ; T=0x0001  (2)
+ARM COMPILER V2.32a,  GSM                                                                  21/06/22  23:48:52  PAGE 4   
+
+   20: }
+ 00000014  3401      ADD         R4,#0x1
+ 00000016  0624      LSL         R4,R4,#0x18
+ 00000018  0E24      LSR         R4,R4,#0x18
+ 0000001A          L_3:
+ 0000001A  1C20      MOV         R0,R4 ; i
+ 0000001C  0601      LSL         R1,R0,#0x18 ; i
+ 0000001E  0E09      LSR         R1,R1,#0x18
+ 00000020  4800      LDR         R0,=cmd_1 ; cmd_1
+ 00000022  5C40      LDRB        R0,[R0,R1]
+ 00000024  2800      CMP         R0,#0x0
+ 00000026  D1EE      BNE         L_4  ; T=0x00000006
+   21: UART0_TX(0X0D);
+ 00000028  200D      MOV         R0,#0xD
+ 0000002A  F7FF      BL          UART0_TX?T  ; T=0x0001  (1)
+ 0000002C  FFE9      BL          UART0_TX?T  ; T=0x0001  (2)
+   22: while(UART0_RECV()!='K');
+ 0000002E          L_6:
+ 0000002E  F7FF      BL          UART0_RECV?T  ; T=0x0001  (1)
+ 00000030  FFE7      BL          UART0_RECV?T  ; T=0x0001  (2)
+ 00000032  0600      LSL         R0,R0,#0x18 ; UART0_RECV?T
+ 00000034  0E00      LSR         R0,R0,#0x18
+ 00000036  284B      CMP         R0,#0x4B
+ 00000038  D1F9      BNE         L_6  ; T=0x0000002E
+   24: for(i=0;cmd_6[i]!='\0';i++)
+ 0000003A  2400      MOV         R4,#0x0
+ 0000003C  E009      B           L_12  ; T=0x00000052
+ 0000003E          L_13:
+   26: UART0_TX(cmd_6[i]);                             // at&w,modification saving in eeprom
+ 0000003E  1C20      MOV         R0,R4 ; i
+ 00000040  0601      LSL         R1,R0,#0x18 ; i
+ 00000042  0E09      LSR         R1,R1,#0x18
+ 00000044  4800      LDR         R0,=cmd_6 ; cmd_6
+ 00000046  5C40      LDRB        R0,[R0,R1]
+ 00000048  F7FF      BL          UART0_TX?T  ; T=0x0001  (1)
+ 0000004A  FFDA      BL          UART0_TX?T  ; T=0x0001  (2)
+   27: }
+ 0000004C  3401      ADD         R4,#0x1
+ 0000004E  0624      LSL         R4,R4,#0x18
+ 00000050  0E24      LSR         R4,R4,#0x18
+ 00000052          L_12:
+ 00000052  1C20      MOV         R0,R4 ; i
+ 00000054  0601      LSL         R1,R0,#0x18 ; i
+ 00000056  0E09      LSR         R1,R1,#0x18
+ 00000058  4800      LDR         R0,=cmd_6 ; cmd_6
+ 0000005A  5C40      LDRB        R0,[R0,R1]
+ 0000005C  2800      CMP         R0,#0x0
+ 0000005E  D1EE      BNE         L_13  ; T=0x0000003E
+   28: UART0_TX(0X0D);
+ 00000060  200D      MOV         R0,#0xD
+ 00000062  F7FF      BL          UART0_TX?T  ; T=0x0001  (1)
+ 00000064  FFCD      BL          UART0_TX?T  ; T=0x0001  (2)
+   29: while(UART0_RECV()!='K');
+ 00000066          L_15:
+ 00000066  F7FF      BL          UART0_RECV?T  ; T=0x0001  (1)
+ 00000068  FFCB      BL          UART0_RECV?T  ; T=0x0001  (2)
+ 0000006A  0600      LSL         R0,R0,#0x18 ; UART0_RECV?T
+ 0000006C  0E00      LSR         R0,R0,#0x18
+ 0000006E  284B      CMP         R0,#0x4B
+ 00000070  D1F9      BNE         L_15  ; T=0x00000066
+   32: for(i=0;cmd_2[i]!='\0';i++)
+ 00000072  2400      MOV         R4,#0x0
+ 00000074  E009      B           L_21  ; T=0x0000008A
+ 00000076          L_22:
+   34: UART0_TX(cmd_2[i]);                             // attention command for echo
+ 00000076  1C20      MOV         R0,R4 ; i
+ARM COMPILER V2.32a,  GSM                                                                  21/06/22  23:48:52  PAGE 5   
+
+ 00000078  0601      LSL         R1,R0,#0x18 ; i
+ 0000007A  0E09      LSR         R1,R1,#0x18
+ 0000007C  4800      LDR         R0,=cmd_2 ; cmd_2
+ 0000007E  5C40      LDRB        R0,[R0,R1]
+ 00000080  F7FF      BL          UART0_TX?T  ; T=0x0001  (1)
+ 00000082  FFBE      BL          UART0_TX?T  ; T=0x0001  (2)
+   35: }
+ 00000084  3401      ADD         R4,#0x1
+ 00000086  0624      LSL         R4,R4,#0x18
+ 00000088  0E24      LSR         R4,R4,#0x18
+ 0000008A          L_21:
+ 0000008A  1C20      MOV         R0,R4 ; i
+ 0000008C  0601      LSL         R1,R0,#0x18 ; i
+ 0000008E  0E09      LSR         R1,R1,#0x18
+ 00000090  4800      LDR         R0,=cmd_2 ; cmd_2
+ 00000092  5C40      LDRB        R0,[R0,R1]
+ 00000094  2800      CMP         R0,#0x0
+ 00000096  D1EE      BNE         L_22  ; T=0x00000076
+   36: UART0_TX(0X0D);
+ 00000098  200D      MOV         R0,#0xD
+ 0000009A  F7FF      BL          UART0_TX?T  ; T=0x0001  (1)
+ 0000009C  FFB1      BL          UART0_TX?T  ; T=0x0001  (2)
+   37: while(UART0_RECV()!='K');
+ 0000009E          L_24:
+ 0000009E  F7FF      BL          UART0_RECV?T  ; T=0x0001  (1)
+ 000000A0  FFAF      BL          UART0_RECV?T  ; T=0x0001  (2)
+ 000000A2  0600      LSL         R0,R0,#0x18 ; UART0_RECV?T
+ 000000A4  0E00      LSR         R0,R0,#0x18
+ 000000A6  284B      CMP         R0,#0x4B
+ 000000A8  D1F9      BNE         L_24  ; T=0x0000009E
+   40: for(i=0;cmd_3[i]!='\0';i++)
+ 000000AA  2400      MOV         R4,#0x0
+ 000000AC  E009      B           L_30  ; T=0x000000C2
+ 000000AE          L_31:
+   42: UART0_TX(cmd_3[i]);               //procedure for message reception from the n/w 
+ 000000AE  1C20      MOV         R0,R4 ; i
+ 000000B0  0601      LSL         R1,R0,#0x18 ; i
+ 000000B2  0E09      LSR         R1,R1,#0x18
+ 000000B4  4800      LDR         R0,=cmd_3 ; cmd_3
+ 000000B6  5C40      LDRB        R0,[R0,R1]
+ 000000B8  F7FF      BL          UART0_TX?T  ; T=0x0001  (1)
+ 000000BA  FFA2      BL          UART0_TX?T  ; T=0x0001  (2)
+   43: }
+ 000000BC  3401      ADD         R4,#0x1
+ 000000BE  0624      LSL         R4,R4,#0x18
+ 000000C0  0E24      LSR         R4,R4,#0x18
+ 000000C2          L_30:
+ 000000C2  1C20      MOV         R0,R4 ; i
+ 000000C4  0601      LSL         R1,R0,#0x18 ; i
+ 000000C6  0E09      LSR         R1,R1,#0x18
+ 000000C8  4800      LDR         R0,=cmd_3 ; cmd_3
+ 000000CA  5C40      LDRB        R0,[R0,R1]
+ 000000CC  2800      CMP         R0,#0x0
+ 000000CE  D1EE      BNE         L_31  ; T=0x000000AE
+   44: UART0_TX(0X0D);
+ 000000D0  200D      MOV         R0,#0xD
+ 000000D2  F7FF      BL          UART0_TX?T  ; T=0x0001  (1)
+ 000000D4  FF95      BL          UART0_TX?T  ; T=0x0001  (2)
+   45: while(UART0_RECV()!='K');
+ 000000D6          L_33:
+ 000000D6  F7FF      BL          UART0_RECV?T  ; T=0x0001  (1)
+ 000000D8  FF93      BL          UART0_RECV?T  ; T=0x0001  (2)
+ 000000DA  0600      LSL         R0,R0,#0x18 ; UART0_RECV?T
+ 000000DC  0E00      LSR         R0,R0,#0x18
+ 000000DE  284B      CMP         R0,#0x4B
+ 000000E0  D1F9      BNE         L_33  ; T=0x000000D6
+ARM COMPILER V2.32a,  GSM                                                                  21/06/22  23:48:52  PAGE 6   
+
+   48: for(i=0;cmd_4[i]!='\0';i++)
+ 000000E2  2400      MOV         R4,#0x0
+ 000000E4  E009      B           L_39  ; T=0x000000FA
+ 000000E6          L_40:
+   50: UART0_TX(cmd_4[i]);                 // attention command for message in text mode
+ 000000E6  1C20      MOV         R0,R4 ; i
+ 000000E8  0601      LSL         R1,R0,#0x18 ; i
+ 000000EA  0E09      LSR         R1,R1,#0x18
+ 000000EC  4800      LDR         R0,=cmd_4 ; cmd_4
+ 000000EE  5C40      LDRB        R0,[R0,R1]
+ 000000F0  F7FF      BL          UART0_TX?T  ; T=0x0001  (1)
+ 000000F2  FF86      BL          UART0_TX?T  ; T=0x0001  (2)
+   51: }
+ 000000F4  3401      ADD         R4,#0x1
+ 000000F6  0624      LSL         R4,R4,#0x18
+ 000000F8  0E24      LSR         R4,R4,#0x18
+ 000000FA          L_39:
+ 000000FA  1C20      MOV         R0,R4 ; i
+ 000000FC  0601      LSL         R1,R0,#0x18 ; i
+ 000000FE  0E09      LSR         R1,R1,#0x18
+ 00000100  4800      LDR         R0,=cmd_4 ; cmd_4
+ 00000102  5C40      LDRB        R0,[R0,R1]
+ 00000104  2800      CMP         R0,#0x0
+ 00000106  D1EE      BNE         L_40  ; T=0x000000E6
+   52: UART0_TX(0X0D);
+ 00000108  200D      MOV         R0,#0xD
+ 0000010A  F7FF      BL          UART0_TX?T  ; T=0x0001  (1)
+ 0000010C  FF79      BL          UART0_TX?T  ; T=0x0001  (2)
+   53: while(UART0_RECV()!='K');
+ 0000010E          L_42:
+ 0000010E  F7FF      BL          UART0_RECV?T  ; T=0x0001  (1)
+ 00000110  FF77      BL          UART0_RECV?T  ; T=0x0001  (2)
+ 00000112  0600      LSL         R0,R0,#0x18 ; UART0_RECV?T
+ 00000114  0E00      LSR         R0,R0,#0x18
+ 00000116  284B      CMP         R0,#0x4B
+ 00000118  D1F9      BNE         L_42  ; T=0x0000010E
+ 0000011A            ; SCOPE-END
+   58: }
+ 0000011A  BC10      POP         {R4}
+ 0000011C  BC08      POP         {R3}
+ 0000011E  4718      BX          R3
+ 00000120          ENDP ; 'Gsm_Init?T'
+
+
+*** CODE SEGMENT '?PR?Gsm_Del_Msg?T?GSM':
+   60:  void Gsm_Del_Msg()
+ 00000000  B500      PUSH        {LR}
+   62: UART0_TX_ST("AT+CMGDA=\"del all\"");                           
+ 00000002  4800      LDR         R0,=??S_6 ; ??S_6
+ 00000004  F7FF      BL          UART0_TX_ST?T  ; T=0x0001  (1)
+ 00000006  FFFC      BL          UART0_TX_ST?T  ; T=0x0001  (2)
+   63: UART0_TX(0X0D);
+ 00000008  200D      MOV         R0,#0xD
+ 0000000A  F7FF      BL          UART0_TX?T  ; T=0x0001  (1)
+ 0000000C  FFF9      BL          UART0_TX?T  ; T=0x0001  (2)
+   67: }
+ 0000000E  BC08      POP         {R3}
+ 00000010  4718      BX          R3
+ 00000012          ENDP ; 'Gsm_Del_Msg?T'
+
+
+
+Module Information          Static
+----------------------------------
+  code size            =    ------
+  data size            =        53
+  const size           =        19
+End of Module Information.
+
+
+ARM COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

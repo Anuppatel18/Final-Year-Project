@@ -1,0 +1,332 @@
+ARM COMPILER V2.32a,  UART                                                                 21/06/22  23:48:52  PAGE 1   
+
+
+ARM COMPILER V2.32a, COMPILATION OF MODULE UART
+OBJECT MODULE PLACED IN UART.OBJ
+COMPILER INVOKED BY: D:\keil3\ARM\BIN\CA.exe UART.c THUMB BROWSE DEBUG TABS(4) 
+
+stmt  level    source
+
+    1          #include<Header.h>
+    2          
+    3          void UART0_INIT()
+    4          {
+    5   1          PINSEL0|=0X00000005;    
+    6   1          U0LCR=0X83;          
+    7   1          U0DLL=0X61;
+    8   1          U0DLM=0X00;
+    9   1          U0LCR=0X03;
+   10   1      }
+   11          
+   12           void UART_INIT1()
+   13          {
+   14   1          PINSEL0|=0X00050000;
+   15   1          U1LCR=0X83;
+   16   1          U1DLL=0X61;
+   17   1          U1DLM=0X00;
+   18   1          U1LCR=0X03;
+   19   1          
+   20   1      }
+   21          void UART0_TX(unsigned char rec)
+   22          {
+   23   1          U0THR=rec;
+   24   1          while(!(U0LSR&0X20));
+   25   1      }
+   26          
+   27          unsigned char UART0_RECV()
+   28          {
+   29   1          unsigned char a;
+   30   1      
+   31   1      //  while(!(U0LSR&0X01));
+   32   1          while((U0LSR & (1<<0))==0);
+   33   1          a=U0RBR;
+   34   1          return(a);
+   35   1      }
+   36          
+   37          void UART0_TX_ST(unsigned char *Ptr)
+   38          {
+   39   1          while(*Ptr)
+   40   1          {
+   41   2          UART0_TX(*Ptr);
+   42   2          Ptr++;
+   43   2          }
+   44   1      }
+   45          
+   46          void THX_UART1(unsigned char smg)
+   47          {
+   48   1          U1THR = smg;
+   49   1          while(!(U1LSR & 0X20));
+   50   1      }
+   51          
+   52           char RX_UART1()
+   53          {
+   54   1      //  char a;
+   55   1      
+   56   1          while((U1LSR & 0X01)==0);
+   57   1          
+   58   1      
+   59   1         return  U1RBR;
+ARM COMPILER V2.32a,  UART                                                                 21/06/22  23:48:52  PAGE 2   
+
+   60   1      }
+   61          
+   62          void UART_STRING1(unsigned char *ptr)
+   63          {
+   64   1          while(*ptr)
+   65   1          {
+   66   2              THX_UART1(*ptr);
+   67   2              ptr++;
+   68   2          }
+   69   1      
+   70   1      }
+   71          
+   72          
+   73          void UART0_TX1(unsigned int rec)
+   74          {
+   75   1          U0THR=rec;
+   76   1          while(!(U0LSR&0X20));
+   77   1      }
+ARM COMPILER V2.32a,  UART                                                                 21/06/22  23:48:52  PAGE 3   
+
+ASSEMBLY LISTING OF GENERATED OBJECT CODE
+
+
+
+*** PUBLICS:
+ PUBLIC         UART0_INIT?T
+ PUBLIC         UART0_RECV?T
+ PUBLIC         UART0_TX?T
+ PUBLIC         UART0_TX_ST?T
+ PUBLIC         UART_INIT1?T
+ PUBLIC         THX_UART1?T
+ PUBLIC         RX_UART1?T
+ PUBLIC         UART_STRING1?T
+ PUBLIC         UART0_TX1?T
+
+
+
+*** CODE SEGMENT '?PR?UART0_INIT?T?UART':
+    5:     PINSEL0|=0X00000005;    
+ 00000000  2205      MOV         R2,#0x5
+ 00000002  4800      LDR         R0,=0xE002C000
+ 00000004  6801      LDR         R1,[R0,#0x0]
+ 00000006  4311      ORR         R1,R2
+ 00000008  6001      STR         R1,[R0,#0x0]
+    6:     U0LCR=0X83;          
+ 0000000A  2183      MOV         R1,#0x83
+ 0000000C  4800      LDR         R0,=0xE000C00C
+ 0000000E  7001      STRB        R1,[R0,#0x0]
+    7:     U0DLL=0X61;
+ 00000010  2161      MOV         R1,#0x61
+ 00000012  4800      LDR         R0,=0xE000C000
+ 00000014  7001      STRB        R1,[R0,#0x0]
+    8:     U0DLM=0X00;
+ 00000016  2100      MOV         R1,#0x0
+ 00000018  4800      LDR         R0,=0xE000C004
+ 0000001A  7001      STRB        R1,[R0,#0x0]
+    9:     U0LCR=0X03;
+ 0000001C  2103      MOV         R1,#0x3
+ 0000001E  4800      LDR         R0,=0xE000C00C
+ 00000020  7001      STRB        R1,[R0,#0x0]
+   10: }
+ 00000022  4770      BX          R14
+ 00000024          ENDP ; 'UART0_INIT?T'
+
+
+*** CODE SEGMENT '?PR?UART_INIT1?T?UART':
+   14:      PINSEL0|=0X00050000;
+ 00000000  4800      LDR         R2,=0x50000
+ 00000002  4800      LDR         R0,=0xE002C000
+ 00000004  6801      LDR         R1,[R0,#0x0]
+ 00000006  4311      ORR         R1,R2
+ 00000008  6001      STR         R1,[R0,#0x0]
+   15:     U1LCR=0X83;
+ 0000000A  2183      MOV         R1,#0x83
+ 0000000C  4800      LDR         R0,=0xE001000C
+ 0000000E  7001      STRB        R1,[R0,#0x0]
+   16:     U1DLL=0X61;
+ 00000010  2161      MOV         R1,#0x61
+ 00000012  4800      LDR         R0,=0xE0010000
+ 00000014  7001      STRB        R1,[R0,#0x0]
+   17:     U1DLM=0X00;
+ 00000016  2100      MOV         R1,#0x0
+ 00000018  4800      LDR         R0,=0xE0010004
+ 0000001A  7001      STRB        R1,[R0,#0x0]
+   18:     U1LCR=0X03;
+ 0000001C  2103      MOV         R1,#0x3
+ 0000001E  4800      LDR         R0,=0xE001000C
+ 00000020  7001      STRB        R1,[R0,#0x0]
+   20: }
+ 00000022  4770      BX          R14
+ 00000024          ENDP ; 'UART_INIT1?T'
+
+ARM COMPILER V2.32a,  UART                                                                 21/06/22  23:48:52  PAGE 4   
+
+
+*** CODE SEGMENT '?PR?UART0_TX?T?UART':
+   21: void UART0_TX(unsigned char rec)
+ 00000000  1C02      MOV         R2,R0 ; rec
+ 00000002  ---- Variable 'rec' assigned to Register 'R2' ----
+   23:        U0THR=rec;
+ 00000002  1C11      MOV         R1,R2 ; rec
+ 00000004  4800      LDR         R0,=0xE000C000
+ 00000006  7001      STRB        R1,[R0,#0x0]
+   24:     while(!(U0LSR&0X20));
+ 00000008          L_1:
+ 00000008  4800      LDR         R0,=0xE000C014
+ 0000000A  7800      LDRB        R0,[R0,#0x0]
+ 0000000C  2120      MOV         R1,#0x20
+ 0000000E  4208      TST         R0,R1
+ 00000010  D0FA      BEQ         L_1  ; T=0x00000008
+   25: }
+ 00000012  4770      BX          R14
+ 00000014          ENDP ; 'UART0_TX?T'
+
+
+*** CODE SEGMENT '?PR?UART0_RECV?T?UART':
+   28: {
+ 00000000            ; SCOPE-START
+   32:     while((U0LSR & (1<<0))==0);
+ 00000000          L_5:
+ 00000000  4800      LDR         R0,=0xE000C014
+ 00000002  7800      LDRB        R0,[R0,#0x0]
+ 00000004  2101      MOV         R1,#0x1
+ 00000006  4208      TST         R0,R1
+ 00000008  D0FA      BEQ         L_5  ; T=0x00000000
+   33:     a=U0RBR;
+ 0000000A  4800      LDR         R0,=0xE000C000
+ 0000000C  7801      LDRB        R1,[R0,#0x0]
+ 0000000E  ---- Variable 'a' assigned to Register 'R1' ----
+   34:     return(a);
+ 0000000E  1C08      MOV         R0,R1 ; a
+ 00000010  0600      LSL         R0,R0,#0x18 ; a
+ 00000012  0E00      LSR         R0,R0,#0x18
+ 00000014            ; SCOPE-END
+   35: }
+ 00000014  4770      BX          R14
+ 00000016          ENDP ; 'UART0_RECV?T'
+
+
+*** CODE SEGMENT '?PR?UART0_TX_ST?T?UART':
+   37: void UART0_TX_ST(unsigned char *Ptr)
+ 00000000  B500      PUSH        {LR}
+ 00000002  1C03      MOV         R3,R0 ; Ptr
+ 00000004  ---- Variable 'Ptr' assigned to Register 'R3' ----
+   39:     while(*Ptr)
+ 00000004  E004      B           L_10  ; T=0x00000010
+ 00000006          L_12:
+   41:     UART0_TX(*Ptr);
+ 00000006  1C18      MOV         R0,R3 ; Ptr
+ 00000008  7800      LDRB        R0,[R0,#0x0] ; Ptr
+ 0000000A  F7FF      BL          UART0_TX?T  ; T=0x0001  (1)
+ 0000000C  FFF9      BL          UART0_TX?T  ; T=0x0001  (2)
+   42:     Ptr++;
+ 0000000E  3301      ADD         R3,#0x1
+   43:     }
+ 00000010          L_10:
+ 00000010  1C18      MOV         R0,R3 ; Ptr
+ 00000012  7800      LDRB        R0,[R0,#0x0] ; Ptr
+ 00000014  2800      CMP         R0,#0x0
+ 00000016  D1F6      BNE         L_12  ; T=0x00000006
+   44: }
+ 00000018  BC08      POP         {R3}
+ 0000001A  4718      BX          R3
+ 0000001C          ENDP ; 'UART0_TX_ST?T'
+
+
+*** CODE SEGMENT '?PR?THX_UART1?T?UART':
+ARM COMPILER V2.32a,  UART                                                                 21/06/22  23:48:52  PAGE 5   
+
+   46: void THX_UART1(unsigned char smg)
+ 00000000  1C02      MOV         R2,R0 ; smg
+ 00000002  ---- Variable 'smg' assigned to Register 'R2' ----
+   48:       U1THR = smg;
+ 00000002  1C11      MOV         R1,R2 ; smg
+ 00000004  4800      LDR         R0,=0xE0010000
+ 00000006  7001      STRB        R1,[R0,#0x0]
+   49:     while(!(U1LSR & 0X20));
+ 00000008          L_14:
+ 00000008  4800      LDR         R0,=0xE0010014
+ 0000000A  7800      LDRB        R0,[R0,#0x0]
+ 0000000C  2120      MOV         R1,#0x20
+ 0000000E  4208      TST         R0,R1
+ 00000010  D0FA      BEQ         L_14  ; T=0x00000008
+   50: }
+ 00000012  4770      BX          R14
+ 00000014          ENDP ; 'THX_UART1?T'
+
+
+*** CODE SEGMENT '?PR?RX_UART1?T?UART':
+   56:     while((U1LSR & 0X01)==0);
+ 00000000          L_18:
+ 00000000  4800      LDR         R0,=0xE0010014
+ 00000002  7800      LDRB        R0,[R0,#0x0]
+ 00000004  2101      MOV         R1,#0x1
+ 00000006  4208      TST         R0,R1
+ 00000008  D0FA      BEQ         L_18  ; T=0x00000000
+   59:    return  U1RBR;
+ 0000000A  4800      LDR         R0,=0xE0010000
+ 0000000C  7800      LDRB        R0,[R0,#0x0]
+   60: }
+ 0000000E  4770      BX          R14
+ 00000010          ENDP ; 'RX_UART1?T'
+
+
+*** CODE SEGMENT '?PR?UART_STRING1?T?UART':
+   62: void UART_STRING1(unsigned char *ptr)
+ 00000000  B500      PUSH        {LR}
+ 00000002  1C03      MOV         R3,R0 ; ptr
+ 00000004  ---- Variable 'ptr' assigned to Register 'R3' ----
+   64:     while(*ptr)
+ 00000004  E004      B           L_23  ; T=0x00000010
+ 00000006          L_25:
+   66:         THX_UART1(*ptr);
+ 00000006  1C18      MOV         R0,R3 ; ptr
+ 00000008  7800      LDRB        R0,[R0,#0x0] ; ptr
+ 0000000A  F7FF      BL          THX_UART1?T  ; T=0x0001  (1)
+ 0000000C  FFF9      BL          THX_UART1?T  ; T=0x0001  (2)
+   67:         ptr++;
+ 0000000E  3301      ADD         R3,#0x1
+   68:     }
+ 00000010          L_23:
+ 00000010  1C18      MOV         R0,R3 ; ptr
+ 00000012  7800      LDRB        R0,[R0,#0x0] ; ptr
+ 00000014  2800      CMP         R0,#0x0
+ 00000016  D1F6      BNE         L_25  ; T=0x00000006
+   70: }
+ 00000018  BC08      POP         {R3}
+ 0000001A  4718      BX          R3
+ 0000001C          ENDP ; 'UART_STRING1?T'
+
+
+*** CODE SEGMENT '?PR?UART0_TX1?T?UART':
+   73: void UART0_TX1(unsigned int rec)
+ 00000000  ---- Variable 'rec' assigned to Register 'R0' ----
+   75:        U0THR=rec;
+ 00000000  1C01      MOV         R1,R0 ; rec
+ 00000002  4800      LDR         R0,=0xE000C000
+ 00000004  7001      STRB        R1,[R0,#0x0]
+   76:     while(!(U0LSR&0X20));
+ 00000006          L_27:
+ 00000006  4800      LDR         R0,=0xE000C014
+ARM COMPILER V2.32a,  UART                                                                 21/06/22  23:48:52  PAGE 6   
+
+ 00000008  7800      LDRB        R0,[R0,#0x0]
+ 0000000A  2120      MOV         R1,#0x20
+ 0000000C  4208      TST         R0,R1
+ 0000000E  D0FA      BEQ         L_27  ; T=0x00000006
+   77: }
+ 00000010  4770      BX          R14
+ 00000012          ENDP ; 'UART0_TX1?T'
+
+
+
+Module Information          Static
+----------------------------------
+  code size            =    ------
+  data size            =    ------
+  const size           =    ------
+End of Module Information.
+
+
+ARM COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
